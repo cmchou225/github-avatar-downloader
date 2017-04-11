@@ -1,6 +1,8 @@
 const request = require('request');
 const fs = require('fs');
 
+const repoOwner = process.argv[2];
+const repoName = process.argv[3];
 
 console.log('Welcome to the GibHub Avatar Downloader!');
 
@@ -10,7 +12,8 @@ const GITHUB_USER = 'cmchou225',
       GITHUB_TOKEN = '94de8947e1520cf2ab222b5781915d39dd017c03';
 
 function getRepoContributors(repoOwner, repoName, cb) {
-
+  if(!repoOwner || !repoName)
+    return console.log("Please enter both the repository owner and repository.");
   const options = {
     url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
     headers: {
@@ -52,4 +55,11 @@ function downloadImageByURL(url, filePath){
 //   console.log('result:', result);
 // });
 
-getRepoContributors('jquery', 'jquery', callback);
+getRepoContributors(repoOwner, repoName, callback);
+
+
+
+
+
+
+
