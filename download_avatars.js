@@ -1,25 +1,33 @@
+require('dotenv').config();
+
 const request = require('request'),
       fs = require('fs'),
-      git = require('./gitToken.js'),
       repoOwner = process.argv[2],
       repoName = process.argv[3];
 
 console.log('Welcome to the GibHub Avatar Downloader!');
 
-const GITHUB_USER = git.username,
-      GITHUB_TOKEN = git.token;
+const GITHUB_USER = process.env.DB_USER,
+      GITHUB_TOKEN = process.env.DB_PASS;
 
 //Main function to download avatar pictures  with repo owner and name input
 function getRepoContributors(repoOwner, repoName, cb) {
   if(!repoOwner || !repoName)
     return console.log("Please enter both the repository owner and repository.");
+
   const options = {
     url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
     headers: {
       'User-Agent':  "GitHub Avatar Downloader - Student Project"
     }
   }
+
   request(options, function(err, response, body) {
+    if(err) {
+      console.log("Error found", err);
+      return;
+    }
+    console.log("Response Status Code: ", response.statusCode, "Response Message: ", response.statusMessage);
     const content = JSON.parse(body);
     cb(content);
   });
