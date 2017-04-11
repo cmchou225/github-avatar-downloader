@@ -1,14 +1,15 @@
 const request = require('request');
 const fs = require('fs');
 
+
 console.log('Welcome to the GibHub Avatar Downloader!');
 
-// 'https://cmchou225@c2bbe98c0d47f95a8ca29d56e21634093f79f8c4api.github.com/repos/jquery/jquery/contributors'
 
-const GITHUB_USER = "cmchou225",
-      GITHUB_TOKEN = "c2bbe98c0d47f95a8ca29d56e21634093f79f8c4";
 
-function getRepoContributors(repoOwner, repoName) {
+const GITHUB_USER = 'cmchou225',
+      GITHUB_TOKEN = '94de8947e1520cf2ab222b5781915d39dd017c03';
+
+function getRepoContributors(repoOwner, repoName, cb) {
 
   const options = {
     url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
@@ -16,24 +17,25 @@ function getRepoContributors(repoOwner, repoName) {
       'User-Agent':  "GitHub Avatar Downloader - Student Project"
     }
   }
+  let content;
+  request(options, function(err, response, body) {
+    content = JSON.parse(body);
+    console.log(typeof content);
+    console.log(content);
+    cb(content);
+  });
 
-  let body = "";
-  request(options)
-  .on('error' , function (err) {
-    console.log(`Error ${err}`)
-    throw err;
-   })
-  .on('response', function (response) {
-    console.log(`${response.statusCode} ${response.statusMessage}`)
-  })
-  .on('data', function (chunk) {
-    body += chunk;
-  })
-  .on('end', function () {
-    console.log(JSON.parse(body));
-  })
+
+
 }
 
+function callback (array){
+  console.log( " I'm IN THE FUCKING CALL BACK");
+  console.log(typeof array);
+  array.forEach(function (obj){
+    console.log(obj['avatar_url']);
+  });
+}
 
 
 // getRepoContributors("jquery", "jquery", function (err, result){
@@ -41,4 +43,4 @@ function getRepoContributors(repoOwner, repoName) {
 //   console.log('result:', result);
 // });
 
-getRepoContributors('jquery', 'jquery');
+getRepoContributors('jquery', 'jquery', callback);
