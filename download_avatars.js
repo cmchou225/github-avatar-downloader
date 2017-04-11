@@ -20,27 +20,35 @@ function getRepoContributors(repoOwner, repoName, cb) {
   let content;
   request(options, function(err, response, body) {
     content = JSON.parse(body);
-    console.log(typeof content);
     console.log(content);
     cb(content);
   });
 
 
-
 }
 
 function callback (array){
-  console.log( " I'm IN THE FUCKING CALL BACK");
-  console.log(typeof array);
+
   array.forEach(function (obj){
     console.log(obj['avatar_url']);
   });
 }
 
+function downloadImageByURL(url, filePath){
+  request.get(url)
+  .on('error' , function (err) {
+    throw err;
+   })
+  .on('response', function (response) {
+    console.log('Response Status Code: ', response.statusMessage, 'Response content ', response.headers['content-type']);
+   })
+  .pipe(fs.createWriteStream(filePath))
+}
+downloadImageByURL("https://avatars2.githubusercontent.com/u/2741?v=3&s=466", "avatars/kvirani.jpg");
 
 // getRepoContributors("jquery", "jquery", function (err, result){
 //   console.log('Errors', err);
 //   console.log('result:', result);
 // });
 
-getRepoContributors('jquery', 'jquery', callback);
+// getRepoContributors('jquery', 'jquery', callback);
